@@ -20,19 +20,27 @@ import {
 } from "./actions/counterAction";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import StarRateOutlinedIcon from "@material-ui/icons/StarRateOutlined";
+import RestaurantOutlinedIcon from "@material-ui/icons/RestaurantOutlined";
 import InfiniteScroll from "react-infinite-scroll-component";
+
+const PAGE_NUMBER = 1;
 
 function App() {
   const list = useSelector((state) => state.listOfIssues);
   // console.log(list.issues.length);
   const counter = useSelector((state) => state.fetchCounter);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(PAGE_NUMBER);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchIssues(page));
+  }, [dispatch, page]);
+
+  const scrollToEnd = () => {
     setPage(page + 1);
-  }, []);
+  };
 
   function iS() {
     dispatch(incrementStar());
@@ -44,22 +52,22 @@ function App() {
     dispatch(incrementFork());
   }
 
-  const fetchMoreData = () => {
-    dispatch(fetchIssues(page));
-    setPage(page + 1);
-  };
+  // const fetchMoreData = () => {
+  //   dispatch(fetchIssues(page));
+  //   setPage(page + 1);
+  // };
 
   return (
     <Container>
       <hr />
       <Row>
-        <Col md={8}>
+        <Col md={6}>
           <h1>Github Issues Page</h1>
         </Col>
         <Col>
           <ButtonGroup>
             <Button outline size="sm" color="primary" onClick={() => iW()}>
-              Watch
+              <VisibilityOutlinedIcon /> Watch
             </Button>
             <Button active outline size="sm" color="primary">
               {counter.watch}
@@ -69,6 +77,7 @@ function App() {
         <Col>
           <ButtonGroup>
             <Button outline size="sm" color="primary" onClick={() => iS()}>
+              <StarRateOutlinedIcon />
               Star
             </Button>
             <Button active outline size="sm" color="primary">
@@ -80,7 +89,7 @@ function App() {
         <Col>
           <ButtonGroup>
             <Button outline size="sm" color="primary" onClick={() => iF()}>
-              Fork
+              <RestaurantOutlinedIcon /> Fork
             </Button>{" "}
             <Button active outline size="sm" color="primary">
               {counter.fork}
@@ -92,13 +101,13 @@ function App() {
       <Row>
         <InfiniteScroll
           dataLength={list.issues.length}
-          next={() => fetchMoreData}
+          next={scrollToEnd}
           loader={<h4>Loading...</h4>}
           hasMore={true}
         >
           {list.issues.length > 0 ? (
             list.issues.map((issue) => (
-              <Container key={issue.id}>
+              <div className="container" key={issue.title}>
                 <Card>
                   <CardBody>
                     <CardTitle tag="h5">{issue.title}</CardTitle>
@@ -114,7 +123,7 @@ function App() {
                     <CardText>{issue.title}</CardText>
                   </CardBody>
                 </Card>
-              </Container>
+              </div>
             ))
           ) : (
             <p></p>

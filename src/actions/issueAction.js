@@ -5,6 +5,7 @@ export const fetchIssues = (page) => async (dispatch) => {
   const uri =
     "https://api.github.com/repos/facebook/create-react-app/issues?page=" +
     page;
+  // console.log(page);
   fetch(uri, {
     headers: {
       Accept: "application/vnd.github.v3+json",
