@@ -9,32 +9,81 @@ import {
   CardSubtitle,
   CardText,
   Badge,
+  Button,
+  ButtonGroup,
 } from "reactstrap";
 import { fetchIssues } from "./actions/issueAction";
+import {
+  incrementFork,
+  incrementStar,
+  incrementWatch,
+} from "./actions/counterAction";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 function App() {
   const list = useSelector((state) => state.listOfIssues);
-  const watch = useSelector((state) => state.watch);
-  console.log(watch);
+  const counter = useSelector((state) => state.fetchCounter);
+  console.log("Counter: ", counter);
   console.log("List", list.issues);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchIssues());
   }, []);
 
+  function iS() {
+    dispatch(incrementStar());
+  }
+  function iW() {
+    dispatch(incrementWatch());
+  }
+  function iF() {
+    dispatch(incrementFork());
+  }
+
   return (
     <Container>
+      <hr />
       <Row>
-        <Col>
+        <Col md={8}>
           <h1>Github Issues Page</h1>
+        </Col>
+        <Col>
+          <ButtonGroup>
+            <Button outline size="sm" color="primary" onClick={() => iW()}>
+              Watch
+            </Button>
+            <Button active outline size="sm" color="primary">
+              {counter.watch}
+            </Button>
+          </ButtonGroup>
+        </Col>
+        <Col>
+          <ButtonGroup>
+            <Button outline size="sm" color="primary" onClick={() => iS()}>
+              Star
+            </Button>
+            <Button active outline size="sm" color="primary">
+              {counter.star}
+            </Button>
+          </ButtonGroup>
+        </Col>
+
+        <Col>
+          <ButtonGroup>
+            <Button outline size="sm" color="primary" onClick={() => iF()}>
+              Fork
+            </Button>{" "}
+            <Button active outline size="sm" color="primary">
+              {counter.fork}
+            </Button>
+          </ButtonGroup>
         </Col>
       </Row>
       <hr />
       <Row>
         {list.issues.length > 0 ? (
           list.issues.map((issue) => (
-            <Container>
+            <Container key={issue.id}>
               <Card>
                 <CardBody>
                   <CardTitle tag="h5">{issue.title}</CardTitle>
