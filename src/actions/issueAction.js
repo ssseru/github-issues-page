@@ -11,6 +11,7 @@ export const fetchIssues = (page) => async (dispatch) => {
     },
   })
     .then((response) => response.json()) //Converting the response to a JSON object
+    // .then((res) => console.log(res))
     .then((data) => dispatch({ type: FETCH_ISSEUES, payload: data }))
     .catch((error) => console.error(error));
 
