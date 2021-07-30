@@ -1,11 +1,11 @@
 import { FETCH_ISSEUES } from "../constants/issueConstants";
 
 export const fetchIssues = (page) => async (dispatch) => {
-  console.log("In issues action");
+  // console.log("In issues action");
   const uri =
     "https://api.github.com/repos/facebook/create-react-app/issues?page=" +
     page;
-  // console.log(page);
+  console.log("fetched page", page, "from github repo create-react-app");
   fetch(uri, {
     headers: {
       Accept: "application/vnd.github.v3+json",
