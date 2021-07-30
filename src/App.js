@@ -20,9 +20,11 @@ import {
 } from "./actions/counterAction";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 function App() {
   const list = useSelector((state) => state.listOfIssues);
+  // console.log(list.issues.length);
   const counter = useSelector((state) => state.fetchCounter);
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
@@ -41,6 +43,11 @@ function App() {
   function iF() {
     dispatch(incrementFork());
   }
+
+  const fetchMoreData = () => {
+    dispatch(fetchIssues(page));
+    setPage(page + 1);
+  };
 
   return (
     <Container>
@@ -83,29 +90,36 @@ function App() {
       </Row>
       <hr />
       <Row>
-        {list.issues.length > 0 ? (
-          list.issues.map((issue) => (
-            <Container key={issue.id}>
-              <Card>
-                <CardBody>
-                  <CardTitle tag="h5">{issue.title}</CardTitle>
-                  {issue.labels[0] ? (
-                    <Badge color="info">{issue.labels[0].name}</Badge>
-                  ) : (
-                    ""
-                  )}
-                  <CardSubtitle tag="h6" className="mb-2 text-muted">
-                    #{issue.number} created at {issue.created_at} by{" "}
-                    {issue.user.login}
-                  </CardSubtitle>
-                  <CardText>{issue.title}</CardText>
-                </CardBody>
-              </Card>
-            </Container>
-          ))
-        ) : (
-          <p></p>
-        )}
+        <InfiniteScroll
+          dataLength={list.issues.length}
+          next={() => fetchMoreData}
+          loader={<h4>Loading...</h4>}
+          hasMore={true}
+        >
+          {list.issues.length > 0 ? (
+            list.issues.map((issue) => (
+              <Container key={issue.id}>
+                <Card>
+                  <CardBody>
+                    <CardTitle tag="h5">{issue.title}</CardTitle>
+                    {issue.labels[0] ? (
+                      <Badge color="info">{issue.labels[0].name}</Badge>
+                    ) : (
+                      ""
+                    )}
+                    <CardSubtitle tag="h6" className="mb-2 text-muted">
+                      #{issue.number} created at {issue.created_at} by{" "}
+                      {issue.user.login}
+                    </CardSubtitle>
+                    <CardText>{issue.title}</CardText>
+                  </CardBody>
+                </Card>
+              </Container>
+            ))
+          ) : (
+            <p></p>
+          )}
+        </InfiniteScroll>
       </Row>
     </Container>
   );
