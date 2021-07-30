@@ -18,16 +18,18 @@ import {
   incrementStar,
   incrementWatch,
 } from "./actions/counterAction";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 function App() {
   const list = useSelector((state) => state.listOfIssues);
   const counter = useSelector((state) => state.fetchCounter);
-  console.log("Counter: ", counter);
-  console.log("List", list.issues);
+  const [page, setPage] = useState(1);
   const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(fetchIssues());
+    dispatch(fetchIssues(page));
+    setPage(page + 1);
   }, []);
 
   function iS() {

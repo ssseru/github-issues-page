@@ -1,9 +1,11 @@
-import axios from "axios";
 import { FETCH_ISSEUES } from "../constants/issueConstants";
 
-export const fetchIssues = () => async (dispatch) => {
+export const fetchIssues = (page) => async (dispatch) => {
   console.log("In issues action");
-  fetch("https://api.github.com/repos/facebook/create-react-app/issues", {
+  const uri =
+    "https://api.github.com/repos/facebook/create-react-app/issues?page=" +
+    page;
+  fetch(uri, {
     headers: {
       Accept: "application/vnd.github.v3+json",
     },
